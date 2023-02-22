@@ -1,0 +1,94 @@
+﻿@page "/"
+@inject IFruitService fruitService
+
+    
+<style>
+    .search-n-download{
+        display:flex;
+        flex-direction:row;
+        gap:10px;
+        width:100%;
+    }
+</style>
+
+<div class="search-n-download">
+<SearchBox placeholder="Search fruits by family..." SearchQueryChanged="Search" /><a href="/download" class="btn btn-primary">Download List</a>
+    </div>
+
+<br />
+
+@if (fruits == null)
+{
+
+    <p>Fruit not found</p>
+}
+else
+{
+    <div class="row">
+        <div class="col">
+            <h1 class="bg-info text-white">Fruits</h1>
+            <table class="table table-sm table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Name</th>
+                        <th>Family</th>
+                        <th>Genus</th>
+                        <th>Order</th>
+                        <th>Carbohydrates</th>
+                        <th>Protein</th>
+                        <th>Fat</th>
+                        <th>Calories</th>
+                        <th>Sugar</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (Fruit fruit in fruits)
+                    {
+                        <tr>
+                            <td>@fruit.id</td>
+                            <td>@fruit.name</td>
+                            <td>@fruit.family</td>
+                            <td>@fruit.genus</td>
+                            <td>@fruit.order</td>
+                            <td>@fruit.nutritions.carbohydrates</td>
+                            <td>@fruit.nutritions.protein</td>
+                            <td>@fruit.nutritions.fat</td>
+                            <td>@fruit.nutritions.calories</td>
+                            <td>@fruit.nutritions.sugar</td>
+
+                        </tr>
+                    }
+                </tbody>
+
+            </table>
+        </div>
+    </div>
+}
+@code{
+
+   
+    protected List<Fruit> fruits = new List<Fruit>();
+
+
+    protected override async Task OnInitializedAsync()
+    {
+
+        fruits = await fruitService.GetAllFruits();
+      
+
+
+    }
+    async Task Search(string query)
+
+    {
+
+        fruits = await fruitService.SearchFruits(query);
+
+    }
+
+
+
+
+
+}
